@@ -95,7 +95,7 @@
 			<version>1.0</version>
 		</dependency>
 
-		<!-- My -->
+		<!-- MySQL dependency -->
 		<!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
 		<dependency>
 			<groupId>mysql</groupId>
