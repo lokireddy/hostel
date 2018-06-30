@@ -16,10 +16,10 @@
             http://www.springframework.org/schema/context/spring-context.xsd">
             
 	<context:property-placeholder location="classpath:resources/database.properties"/>
-	<context:component-scan base-package="com.myhostelmanager.controller"/>
-	<mvc:annotation-driven/>
+	<context:component-scan base-package="com.myhostelmanager"/>
+	<mvc:annotation-driven />
 	<tx:annotation-driven transaction-manager="hibernateTransactionManager"/>
-
+	<bean class = "org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor"/>
 	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver" id="jspViewResolver">
 	 <property name="viewClass" value="org.springframework.web.servlet.view.JstlView"></property>
 	 <property name="prefix" value="/WEB-INF/view/"></property>
@@ -32,7 +32,7 @@
 		<property name="username" value="${database.username}"/>
 		<property name="password" value="${database.password}"/>
 	</bean>
-	<bean class="org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean" id="sessionFactory">
+	<bean class="org.springframework.orm.hibernate4.LocalSessionFactoryBean" id="sessionFactory">
 		 <property name="dataSource" ref="dataSource"></property>
 		 <property name="annotatedClasses">
 		 	 <list>
@@ -51,7 +51,7 @@
 		 </props>
       </property>
 	</bean>
-	<bean class="org.springframework.orm.hibernate3.HibernateTransactionManager" id="hibernateTransactionManager">
+	<bean class="org.springframework.orm.hibernate4.HibernateTransactionManager" id="hibernateTransactionManager">
 		<property name="sessionFactory" ref="sessionFactory"></property>
   </bean>
 </beans>
