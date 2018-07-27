@@ -152,7 +152,7 @@
 							<div class="cols-sm-10">
 								<div class="input-group">
 									<span class="input-group-addon"><i class="fa fa-phone fa" aria-hidden="true"></i></span>
-									<form:input path="updateTenant.mobile" type="number" min="7000000000" max="9999999999" class="form-control" name="mobile" id="mobile"  placeholder="9876543210"/>
+									<form:input path="updateTenant.mobile" type="number" min="5000000000" max="9999999999" class="form-control" name="mobile" id="mobile"  placeholder="9876543210"/>
 								</div>
 								<form:errors path="updateTenant.mobile" class="err"/>
 							</div>
