@@ -220,6 +220,7 @@ public class MainController {
 			tenantForm.setAmount(p.getAmount());
 			tenantForm.setbId(p.getbId());
 			tenantForm.setDoj(p.getDoj().toString());
+			if(p.getDov() != null)
 			tenantForm.setDov(p.getDov().toString());
 			tenantForm.setEmail(p.getEmail());
 			tenantForm.setHostelName(p.getbId());
