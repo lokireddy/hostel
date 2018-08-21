@@ -95,7 +95,8 @@ public class MainController {
 
 	@RequestMapping(value = "/register", method = RequestMethod.GET)
 	private String signUp() {
-		logger.info("Redirecting to Sign Up");
+		logger.error("ERROR:User Navigated to Signup page");
+		logger.fatal("FATAL:User Navigated to Signup page");
 		return "signup";
 	}
 

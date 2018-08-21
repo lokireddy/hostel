@@ -89,6 +89,13 @@
 			<version>${log4j.version}</version>
 		</dependency>
 
+		<!-- https://mvnrepository.com/artifact/javax.mail/mail -->
+		<dependency>
+			<groupId>javax.mail</groupId>
+			<artifactId>mail</artifactId>
+			<version>1.4.7</version>
+		</dependency>
+
 		<!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-validator -->
 		<dependency>
 			<groupId>org.hibernate</groupId>
@@ -139,5 +146,53 @@
 
 	<build>
 		<finalName>HostelManager</finalName>
+		<plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>cobertura-maven-plugin</artifactId>
+        <version>2.4</version>
+        <configuration>
+          <instrumentation>
+            <includes>
+              <include>foo/bar/**/*.class</include>
+            </includes>
+          </instrumentation>
+        </configuration>
+    <executions>
+      <execution>
+        <id>clean</id>
+        <phase>pre-site</phase>
+        <goals>
+          <goal>clean</goal>
+        </goals>
+      </execution>
+      <execution>
+        <id>instrument</id>
+        <phase>site</phase>
+        <goals>
+          <goal>instrument</goal>
+          <goal>cobertura</goal>
+        </goals>
+      </execution>
+    </executions>
+      </plugin>
+    </plugins>
 	</build>
+	
+	<reporting>
+    <plugins>
+      <plugin>
+    <!-- use mvn cobertura:cobertura to generate cobertura reports -->
+    <groupId>org.codehaus.mojo</groupId>
+    <artifactId>cobertura-maven-plugin</artifactId>
+    <version>2.4</version>
+    <configuration>
+      <formats>
+        <format>html</format>
+        <format>xml</format>
+      </formats>
+     </configuration>
+      </plugin>
+    </plugins>
+  </reporting>
 </project>
