@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.myhostelmanager.dao.LoginDao;
 import com.myhostelmanager.model.Block;
 import com.myhostelmanager.model.Login;
+import com.myhostelmanager.util.BCryptUserAuthentication;
 
 @Service("loginService")
 @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
@@ -35,8 +36,9 @@ public class LoginServiceImpl implements LoginService {
         {
         	Login l=(Login)itr.next();
         	logger.info(l.getUid()+ l.getPwd()+ l.getHid());
-            if(id.equals(l.getUid()) && pswd.equals(l.getPwd())){
-            	status = true;
+            //if(id.equals(l.getUid()) && pswd.equals(l.getPwd())){
+        	if(id.equals(l.getUid()) && BCryptUserAuthentication.isPasswordMatched(pswd, l.getPwd())){
+        		status = true;
             	break;
             }
             else{
@@ -55,7 +57,8 @@ public class LoginServiceImpl implements LoginService {
         {
         	Login l = (Login)itr.next();
         	logger.info( l.getUid()+ l.getPwd()+ l.getHid());
-            if(id.equals(l.getUid()) && pswd.equals(l.getPwd())){
+            //if(id.equals(l.getUid()) && pswd.equals(l.getPwd())){
+        	if(id.equals(l.getUid()) && BCryptUserAuthentication.isPasswordMatched(pswd, l.getPwd())){
             	hostelId = l.getHid();
             }
         }
