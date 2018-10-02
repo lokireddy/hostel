@@ -116,7 +116,7 @@
 	                <div class="row">
 	                    <div class="col-md-12">
 	                        <div class="logo text-center  ">
-	                            <h1>${hostelName}</h1>
+	                            <h1>${bName}</h1>
 	                            
 	                        </div>
 	                    </div>

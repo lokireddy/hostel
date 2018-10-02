@@ -35,8 +35,10 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="logo text-center">
-                            <h1><c:out value = "${hostelName}"/></h1>
-                            
+                            <h1><c:out value = "${bName}"/></h1>
+                        </div>
+                        <div>
+                            <h1><a href = "logout.LoRe">Logout</a></h1>
                         </div>
                     </div>
                 </div>
@@ -53,7 +55,8 @@
                     <div class="col-md-6">
                         
                         <div class="menu-item blue">
-                            <a href="addTenant.LoRe?bId=${bId }&bName=${hostelName}">
+                            <%-- <a href="addTenant.LoRe?bId=${bId }&bName=${hostelName}"> --%>
+                            <a href="addTenant.LoRe">
                                 <br><br>
                                 <p style="font-size:50px">New Tenant</p>
                                 <br><br>
@@ -61,7 +64,7 @@
                         </div>
                         
                         <div class="menu-item green">
-                            <a href="voruTenant.LoRe?bId=${bId }&bName=${hostelName} ">
+                            <a href="voruTenant.LoRe"><!-- ?bId=${bId }&bName=${bName}  -->
 								<br><br>
                                 <p style="font-size:50px">View/Update Tenant </p>
                                 <br><br>

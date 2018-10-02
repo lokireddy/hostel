@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,8 @@ public class MainController {
 	@Autowired
 	private OperationsService operationsService;
 
+	private HttpSession session;
+	
 	Logger logger = Logger.getLogger(MainController.class);
 
 	/*-------------- Login ---------------*/
@@ -54,8 +57,8 @@ public class MainController {
 
 	@RequestMapping(value = "/signin", method = RequestMethod.POST)
 	private ModelAndView Signin(@ModelAttribute("loginForm") LoginForm loginForm, BindingResult result,
-			ModelMap model) {
-		logger.info("Uid: " + loginForm.getUid() + " pwd: " + loginForm.getPwd());
+			ModelMap model, HttpServletRequest request) {
+		logger.debug("Uid: " + loginForm.getUid() + " pwd: " + loginForm.getPwd());
 		ModelAndView modelView = null;
 		LoginValidator loginValidator = new LoginValidator();
 		loginValidator.validateUser(loginForm, result);
@@ -68,13 +71,17 @@ public class MainController {
 			if (b) {
 				logger.info("Getting Hostel Id.");
 				String hostelId = loginService.getHostelId(loginForm.getUid(), loginForm.getPwd());
+				session = request.getSession(false);
+				session.setAttribute("hostelId", hostelId);
 				logger.info("Hostel Id: " + hostelId);
-				model.addAttribute("hostelId", hostelId);
+//				model.addAttribute("hostelId", hostelId);
 				logger.info("Getting Hostel Name.");
-				model.addAttribute("hostelName", loginService.getHostelName(hostelId));
+//				model.addAttribute("hostelName", loginService.getHostelName(hostelId));
+				session.setAttribute("hostelName", loginService.getHostelName(hostelId));
 				logger.info("Getting Block Names");
 				Map<String, String> blockNamesMap = blockService.getBlockIdNames(hostelId);
-				model.addAttribute("BlockNames", blockNamesMap);
+//				model.addAttribute("BlockNames", blockNamesMap);
+				session.setAttribute("BlockNames", blockNamesMap);
 				if (blockNamesMap.size() == 1) {
 					logger.info("Redirecting to Options page");
 					modelView = new ModelAndView("options");
@@ -103,13 +110,16 @@ public class MainController {
 	/*-------------- Options ----------------------------*/
 
 	@RequestMapping(value = "/options", method = RequestMethod.GET)
-	private ModelAndView options(HttpServletRequest request, ModelMap model) {
+	private ModelAndView options(HttpServletRequest request, ModelMap model, HttpSession session) {
 		logger.info("Options method invoked.");
 		String bId = request.getParameter("bId");
 		String bName = request.getParameter("bName");
+		session.setAttribute("bId", bId);
+		session.setAttribute("bName", bName);
 		logger.info("bId: " + bId + "and bName: " + bName);
-		model.addAttribute("bId", bId);
-		model.addAttribute("hostelName", bName);
+//		model.addAttribute("bId", bId);
+//		model.addAttribute("bName", bName);
+		//model.addAttribute("hostelName", bName);
 		logger.info("Block Name:" + bName);
 		return new ModelAndView("options");
 	}
@@ -117,13 +127,16 @@ public class MainController {
 	/*--------------- New Tenant -------------------------*/
 	@RequestMapping(value = "/addTenant", method = RequestMethod.GET)
 	private ModelAndView newTenant(@ModelAttribute("newTenant") NewTenantForm newTenantForm, BindingResult result,
-			ModelMap model, HttpServletRequest request) {
+			ModelMap model, HttpSession session) {
 		logger.info("newTenant method invoked.");
-		String bId = request.getParameter("bId");
-		String bName = request.getParameter("bName");
+		//String bId = request.getParameter("bId");
+		//String bName = request.getParameter("bName");
+		String bId = (String) session.getAttribute("bId");
+		String bName = (String) session.getAttribute("bName");
+		
 		logger.info("bId: " + bId + "and bName: " + bName);
-		model.addAttribute("bId", bId);
-		model.addAttribute("hostelName", bName);
+//		model.addAttribute("bId", bId);
+//		model.addAttribute("hostelName", bName);
 		List<String> roomNos = blockService.getRooms(bId);
 		model.addAttribute("roomNos", roomNos);
 		logger.info("Room Nos added to List.");
@@ -136,8 +149,8 @@ public class MainController {
 			ModelMap model) {
 		ModelAndView modelView = null;
 		logger.info(newTenantForm.toString());
-		model.addAttribute("bId", newTenantForm.getbId());
-		model.addAttribute("hostelName", newTenantForm.getHostelName());
+		//model.addAttribute("bId", newTenantForm.getbId());
+		//model.addAttribute("hostelName", newTenantForm.getHostelName());
 		List<String> roomNos = blockService.getRooms(newTenantForm.getbId());
 		model.addAttribute("roomNos", roomNos);
 		logger.info("Room Nos added to List.");
@@ -168,16 +181,17 @@ public class MainController {
 
 	/*--------------- View/Update Tenant -------------------------*/
 	@RequestMapping(value = "/voruTenant", method = RequestMethod.GET)
-	public ModelAndView viewOrUpdateTenant(HttpServletRequest request, ModelMap model) {
+	public ModelAndView viewOrUpdateTenant(HttpSession session, HttpServletRequest request, ModelMap model) {
 		logger.info("updateTenant GET method invoked.");
-		String bId = request.getParameter("bId");
-		String bName = request.getParameter("bName");
-		logger.info("bId: " + bId + "and bName: " + bName);
-		model.addAttribute("bId", bId);
-		model.addAttribute("hostelName", bName);
+//		String bId = request.getParameter("bId");
+		String bId = (String) session.getAttribute("bId");
+//		String bName = request.getParameter("bName");
+//		logger.info("bId: " + bId + "and bName: " + bName);
+//		model.addAttribute("bId", bId);
+//		model.addAttribute("hostelName", bName);
 		List<Person> allPersons = operationsService.getAllPersons(bId);
 		model.addAttribute("all", allPersons);
-		logger.info("Block Name:" + bName);
+//		logger.info("Block Name:" + bName);
 		return new ModelAndView("allTenants");
 	}
 
@@ -196,6 +210,19 @@ public class MainController {
 		logger.info("Room Nos added to List.");
 		// model.addAttribute("tenant",person);
 		return new ModelAndView("updateTenant", "updateTenant", setFormValues(person));
+	}
+	
+	
+	/*--------------update-------------------------------------*/
+	@RequestMapping(value = "/logout", method = RequestMethod.GET)
+	public String logout(HttpSession session){
+		session.removeAttribute("hostelId");
+		session.removeAttribute("hostelName");
+		session.removeAttribute("bName");
+		session.removeAttribute("bId");
+		session.invalidate();
+		
+		return "redirect:/";
 	}
 
 	public NewTenantForm clearForm(NewTenantForm newTenantForm) {
@@ -221,8 +248,8 @@ public class MainController {
 			tenantForm.setAmount(p.getAmount());
 			tenantForm.setbId(p.getbId());
 			tenantForm.setDoj(p.getDoj().toString());
-			if(p.getDov() != null)
-			tenantForm.setDov(p.getDov().toString());
+			if (p.getDov() != null)
+				tenantForm.setDov(p.getDov().toString());
 			tenantForm.setEmail(p.getEmail());
 			tenantForm.setHostelName(p.getbId());
 			tenantForm.setId(p.getId());
