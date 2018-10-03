@@ -1,0 +1,4 @@
+select o.categoryid,count(orderid) as orderscount,c.name,(c.maxorders-count(orderid)) as remaining
+from dbo.Orders O
+join  dbo.category c on o.categoryid=c.categoryid
+ group by o.categoryid,c.name,c.maxorders
